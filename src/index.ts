@@ -52,4 +52,8 @@ app.listen(config.port, () => {
   console.log("  POST /api/v1/finance/crypto            $0.002");
   console.log("  POST /api/v1/finance/crypto/top        $0.002");
   console.log("  POST /api/v1/finance/crypto/fear-greed $0.001");
+  console.log();
+  console.log("Weather endpoints:");
+  console.log("  POST /api/v1/weather/current           $0.002");
+  console.log("  POST /api/v1/weather/forecast          $0.002");
 });
