@@ -32,6 +32,7 @@ router.get("/api/info", (req, res) => {
         { method: "GET", path: "/api/info", url: `${baseUrl}/api/info`, description: "API information and x402 discovery" },
         { method: "GET", path: "/.well-known/x402.json", url: `${baseUrl}/.well-known/x402.json`, description: "x402 protocol discovery" },
         { method: "GET", path: "/api/v1/openapi.json", url: `${baseUrl}/api/v1/openapi.json`, description: "OpenAPI 3.0 specification" },
+        { method: "POST", path: "/mcp", url: `${baseUrl}/mcp`, description: "MCP Server (Streamable HTTP) — 16 tools for Claude Desktop / Cursor" },
       ],
       paid: [
         {
