@@ -45,4 +45,11 @@ app.listen(config.port, () => {
   console.log("  POST /api/v1/data/json-transform $0.002");
   console.log("  POST /api/v1/crypto/hash     $0.001");
   console.log("  POST /api/v1/util/uuid        $0.001");
+  console.log();
+  console.log("Finance endpoints:");
+  console.log("  POST /api/v1/finance/forex            $0.002");
+  console.log("  POST /api/v1/finance/forex/rates      $0.002");
+  console.log("  POST /api/v1/finance/crypto            $0.002");
+  console.log("  POST /api/v1/finance/crypto/top        $0.002");
+  console.log("  POST /api/v1/finance/crypto/fear-greed $0.001");
 });

@@ -34,6 +34,12 @@ const routes = {
   "POST /api/v1/data/json-transform": route("$0.002", "JSON data transformation (flatten, pick, omit fields)"),
   "POST /api/v1/crypto/hash": route("$0.001", "Generate hash (SHA-256, MD5) of input data"),
   "POST /api/v1/util/uuid": route("$0.001", "Generate UUIDs"),
+  // Finance APIs
+  "POST /api/v1/finance/forex": route("$0.002", "Exchange rate between two currencies"),
+  "POST /api/v1/finance/forex/rates": route("$0.002", "All exchange rates for a base currency"),
+  "POST /api/v1/finance/crypto": route("$0.002", "Cryptocurrency price by symbol"),
+  "POST /api/v1/finance/crypto/top": route("$0.002", "Top cryptocurrencies by market cap"),
+  "POST /api/v1/finance/crypto/fear-greed": route("$0.001", "Crypto Fear & Greed Index"),
 };
 
 export const x402Payment = paymentMiddleware(routes, resourceServer);

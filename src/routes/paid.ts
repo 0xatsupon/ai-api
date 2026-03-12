@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { createHash, randomUUID } from "node:crypto";
+import { getExchangeRate, getAllRates } from "../services/forex.js";
+import { getCoinBySymbol, getTopCoins, getFearGreedIndex } from "../services/crypto.js";
 
 const router = Router();
 
@@ -174,6 +176,74 @@ router.post("/api/v1/util/uuid", (req, res) => {
   const n = Math.min(Math.max(count || 1, 1), 100);
   const uuids = Array.from({ length: n }, () => randomUUID());
   res.json({ uuids, count: n });
+});
+
+// === Finance APIs ===
+
+// Forex - single pair
+router.post("/api/v1/finance/forex", async (req, res) => {
+  const { from, to } = req.body as { from?: string; to?: string };
+  if (!from || !to) {
+    res.status(400).json({ error: "Missing 'from' and/or 'to' currency code (e.g. USD, JPY)" });
+    return;
+  }
+  try {
+    const result = await getExchangeRate(from, to);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// Forex - all rates
+router.post("/api/v1/finance/forex/rates", async (req, res) => {
+  const { base } = req.body as { base?: string };
+  if (!base) {
+    res.status(400).json({ error: "Missing 'base' currency code (e.g. USD)" });
+    return;
+  }
+  try {
+    const result = await getAllRates(base);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// Crypto - single coin
+router.post("/api/v1/finance/crypto", async (req, res) => {
+  const { symbol } = req.body as { symbol?: string };
+  if (!symbol) {
+    res.status(400).json({ error: "Missing 'symbol' (e.g. BTC, ETH)" });
+    return;
+  }
+  try {
+    const result = await getCoinBySymbol(symbol);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// Crypto - top coins
+router.post("/api/v1/finance/crypto/top", async (req, res) => {
+  const { limit } = req.body as { limit?: number };
+  try {
+    const result = await getTopCoins(limit || 10);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// Crypto - Fear & Greed Index
+router.post("/api/v1/finance/crypto/fear-greed", async (_req, res) => {
+  try {
+    const result = await getFearGreedIndex();
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
 });
 
 export default router;

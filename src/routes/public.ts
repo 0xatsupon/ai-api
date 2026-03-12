@@ -23,6 +23,11 @@ router.get("/api/info", (_req, res) => {
         { method: "POST", path: "/api/v1/data/json-transform", price: "$0.002", description: "JSON transformation (flatten, pick, omit)" },
         { method: "POST", path: "/api/v1/crypto/hash", price: "$0.001", description: "Hash generation (SHA-256, MD5, etc.)" },
         { method: "POST", path: "/api/v1/util/uuid", price: "$0.001", description: "UUID generation" },
+        { method: "POST", path: "/api/v1/finance/forex", price: "$0.002", description: "Exchange rate between two currencies" },
+        { method: "POST", path: "/api/v1/finance/forex/rates", price: "$0.002", description: "All exchange rates for a base currency" },
+        { method: "POST", path: "/api/v1/finance/crypto", price: "$0.002", description: "Cryptocurrency price by symbol" },
+        { method: "POST", path: "/api/v1/finance/crypto/top", price: "$0.002", description: "Top cryptocurrencies by market cap" },
+        { method: "POST", path: "/api/v1/finance/crypto/fear-greed", price: "$0.001", description: "Crypto Fear & Greed Index" },
       ],
     },
     payment: {

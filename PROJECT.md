@@ -46,9 +46,12 @@ ai-api/
 │   ├── middleware/
 │   │   ├── x402.ts           ← x402決済ミドルウェア（ここで価格・ルート設定）
 │   │   └── logger.ts         ← リクエストログ（[FREE]/[PAID]/[402]タグ付き）
+│   ├── services/
+│   │   ├── forex.ts          ← 為替データ取得（ExchangeRate-API + キャッシュ）
+│   │   └── crypto.ts         ← 暗号通貨データ（Coinlore + Alternative.me + キャッシュ）
 │   └── routes/
 │       ├── public.ts         ← 無料エンドポイント（/api/health, /api/info）
-│       └── paid.ts           ← 有料エンドポイント（/api/v1/echo 等）
+│       └── paid.ts           ← 有料エンドポイント（ユーティリティ + 金融API）
 ├── .env.example              ← 環境変数テンプレート（コピーして.envを作る）
 ├── .gitignore
 ├── tsconfig.json
@@ -70,6 +73,11 @@ ai-api/
 | POST | /api/v1/data/json-transform | 有料 | $0.002 | JSON変換（flatten, pick, omit, keys, values） |
 | POST | /api/v1/crypto/hash | 有料 | $0.001 | ハッシュ生成（SHA-256, SHA-512, MD5, SHA-1） |
 | POST | /api/v1/util/uuid | 有料 | $0.001 | UUID生成（1〜100個） |
+| POST | /api/v1/finance/forex | 有料 | $0.002 | 為替レート（USD→JPY等） |
+| POST | /api/v1/finance/forex/rates | 有料 | $0.002 | 全通貨の為替レート |
+| POST | /api/v1/finance/crypto | 有料 | $0.002 | 暗号通貨価格（BTC, ETH等） |
+| POST | /api/v1/finance/crypto/top | 有料 | $0.002 | 時価総額トップの暗号通貨 |
+| POST | /api/v1/finance/crypto/fear-greed | 有料 | $0.001 | 暗号通貨 Fear & Greed指数 |
 
 ---
 
@@ -171,6 +179,41 @@ POST /api/v1/crypto/hash
 POST /api/v1/util/uuid
 {"count": 3}
 // → {"uuids": ["uuid1", "uuid2", "uuid3"], "count": 3}
+```
+
+**Forex (為替レート):**
+```json
+POST /api/v1/finance/forex
+{"from": "USD", "to": "JPY"}
+// → {"from": "USD", "to": "JPY", "rate": 149.52, ...}
+```
+
+**Forex Rates (全通貨):**
+```json
+POST /api/v1/finance/forex/rates
+{"base": "USD"}
+// → {"base": "USD", "rates": {"JPY": 149.52, "EUR": 0.92, ...}}
+```
+
+**Crypto (暗号通貨価格):**
+```json
+POST /api/v1/finance/crypto
+{"symbol": "BTC"}
+// → {"symbol": "BTC", "price_usd": "67432.12", "percent_change_24h": "-0.42", ...}
+```
+
+**Crypto Top (トップコイン):**
+```json
+POST /api/v1/finance/crypto/top
+{"limit": 5}
+// → {"coins": [{"symbol": "BTC", ...}, {"symbol": "ETH", ...}], "count": 5}
+```
+
+**Fear & Greed Index:**
+```json
+POST /api/v1/finance/crypto/fear-greed
+{}
+// → {"value": 18, "classification": "Extreme Fear", "description": "..."}
 ```
 
 ### 新しい有料エンドポイントを追加するには
