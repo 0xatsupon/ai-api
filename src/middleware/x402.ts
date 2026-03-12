@@ -43,6 +43,14 @@ const routes = {
   // Weather APIs
   "POST /api/v1/weather/current": route("$0.002", "Current weather by latitude/longitude"),
   "POST /api/v1/weather/forecast": route("$0.002", "7-day weather forecast by latitude/longitude"),
+  // Web APIs
+  "POST /api/v1/web/extract": route("$0.005", "Extract text content from a URL"),
+  // Geo APIs
+  "POST /api/v1/geo/search": route("$0.002", "Geocode an address or place name to coordinates"),
+  // News APIs
+  "POST /api/v1/news/feed": route("$0.003", "Fetch and parse RSS/news feed"),
+  // Network APIs
+  "POST /api/v1/net/dns": route("$0.001", "DNS lookup for a domain"),
 };
 
 export const x402Payment = paymentMiddleware(routes, resourceServer);

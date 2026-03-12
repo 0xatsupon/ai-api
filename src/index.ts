@@ -56,4 +56,15 @@ app.listen(config.port, () => {
   console.log("Weather endpoints:");
   console.log("  POST /api/v1/weather/current           $0.002");
   console.log("  POST /api/v1/weather/forecast          $0.002");
+  console.log();
+  console.log("Web & Geo endpoints:");
+  console.log("  POST /api/v1/web/extract               $0.005");
+  console.log("  POST /api/v1/geo/search                $0.002");
+  console.log();
+  console.log("News & Network endpoints:");
+  console.log("  POST /api/v1/news/feed                 $0.003");
+  console.log("  POST /api/v1/net/dns                   $0.001");
+  console.log();
+  console.log("Discovery:");
+  console.log("  GET  /api/v1/openapi.json");
 });

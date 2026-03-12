@@ -1,8 +1,12 @@
 import { Router } from "express";
 import { createHash, randomUUID } from "node:crypto";
+import { resolve } from "node:dns/promises";
 import { getExchangeRate, getAllRates } from "../services/forex.js";
 import { getCoinBySymbol, getTopCoins, getFearGreedIndex } from "../services/crypto.js";
 import { getCurrentWeather, getWeatherForecast } from "../services/weather.js";
+import { extractContent } from "../services/web.js";
+import { geocodeSearch } from "../services/geo.js";
+import { fetchNewsFeed, getAvailableCategories } from "../services/news.js";
 
 const router = Router();
 
@@ -282,6 +286,94 @@ router.post("/api/v1/weather/forecast", async (req, res) => {
   try {
     const result = await getWeatherForecast(latitude, longitude);
     res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// === Web APIs ===
+
+// Web content extraction
+router.post("/api/v1/web/extract", async (req, res) => {
+  const { url, format } = req.body as { url?: string; format?: string };
+  if (!url || typeof url !== "string") {
+    res.status(400).json({ error: "Missing or invalid 'url' field" });
+    return;
+  }
+  const validFormats = ["text", "markdown", "links"];
+  const fmt = format || "text";
+  if (!validFormats.includes(fmt)) {
+    res.status(400).json({ error: `Invalid format '${fmt}'. Available: ${validFormats.join(", ")}` });
+    return;
+  }
+  try {
+    const result = await extractContent(url, fmt);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// === Geo APIs ===
+
+// Geocoding search
+router.post("/api/v1/geo/search", async (req, res) => {
+  const { query } = req.body as { query?: string };
+  if (!query || typeof query !== "string") {
+    res.status(400).json({ error: "Missing or invalid 'query' field (e.g. 'Tokyo', 'New York')" });
+    return;
+  }
+  try {
+    const result = await geocodeSearch(query);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// === News APIs ===
+
+// RSS/News feed
+router.post("/api/v1/news/feed", async (req, res) => {
+  const { category, url } = req.body as { category?: string; url?: string };
+  if (!category && !url) {
+    res.status(400).json({
+      error: "Provide 'category' or 'url'",
+      available_categories: getAvailableCategories(),
+    });
+    return;
+  }
+  try {
+    const result = await fetchNewsFeed({ category, url });
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// === Network APIs ===
+
+// DNS lookup
+router.post("/api/v1/net/dns", async (req, res) => {
+  const { domain, type } = req.body as { domain?: string; type?: string };
+  if (!domain || typeof domain !== "string") {
+    res.status(400).json({ error: "Missing or invalid 'domain' field" });
+    return;
+  }
+  const validTypes = ["A", "AAAA", "MX", "TXT", "NS", "CNAME", "SOA"];
+  const recordType = (type || "A").toUpperCase();
+  if (!validTypes.includes(recordType)) {
+    res.status(400).json({ error: `Invalid type '${recordType}'. Available: ${validTypes.join(", ")}` });
+    return;
+  }
+  try {
+    const records = await resolve(domain, recordType as any);
+    res.json({
+      domain,
+      type: recordType,
+      records,
+      timestamp: new Date().toISOString(),
+    });
   } catch (e) {
     res.status(400).json({ error: (e as Error).message });
   }
