@@ -1,35 +1,19 @@
 # TODO - あなたがやること
 
 ## 完了
-- [x] MetaMaskブラウザ拡張をインストール
-- [x] MetaMaskでウォレット作成
-- [x] アドレスをClaudeに共有 → .env更新済み
-- [x] デプロイ先決定 → Render（無料枠）
+- [x] MetaMask & ウォレット作成
+- [x] Renderデプロイ完了 & 動作確認OK
+- [x] AIエージェント向けAPI発見機能を強化（Claude実施済み）
+- [x] Mainnet切り替え試行 → Facilitator未対応のため保留
 
-## 今やること — GitHubリポジトリ作成
-1. GitHub (https://github.com) でログイン
-2. 右上の「+」→「New repository」
-3. Repository name: `ai-api`
-4. Private（推奨）を選択
-5. 他はそのまま → 「Create repository」
-6. 作成後、リポジトリURLをClaudeに共有
-
-## その次 — Renderデプロイ（GitHub後）
-1. https://render.com でアカウント作成（GitHub連携）
-2. 「New Web Service」→ `ai-api` リポを選択
-3. 設定:
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
-   - Instance Type: **Free**
-4. 環境変数を追加:
-   - `WALLET_ADDRESS` = `0xFB3A0085fa2e7852f24e96C49EA77e080bE55CAB`
-   - `NETWORK` = `eip155:84532`
-   - `FACILITATOR_URL` = `https://x402.org/facilitator`
-
-## あとでやること
-- [ ] Base Mainnetに切り替え（本番運用開始時）
-- [ ] x402マーケットプレイス（RelAI等）に登録して集客
+## 今やること
+- [ ] x402マーケットプレイス（RelAI等）に登録してAIエージェントに発見してもらう
+- [ ] Facilitator Mainnet対応を待つ → 対応したらRenderでNETWORK変更するだけ
 
 ## メモ
+- 本番URL: https://ai-api-1c5n.onrender.com
 - ウォレットアドレス: `0xFB3A0085fa2e7852f24e96C49EA77e080bE55CAB`
-- envの更新やコード変更はClaudeがやる
+- GitHubリポ: https://github.com/0xatsupon/ai-api (Private)
+- ランニングコスト: $0/月
+- 現在テストネット（Base Sepolia）で稼働中
+- Mainnet移行: Render環境変数 NETWORK を eip155:8453 に変えるだけ
