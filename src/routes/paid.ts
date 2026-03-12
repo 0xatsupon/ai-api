@@ -2,6 +2,7 @@ import { Router } from "express";
 import { createHash, randomUUID } from "node:crypto";
 import { getExchangeRate, getAllRates } from "../services/forex.js";
 import { getCoinBySymbol, getTopCoins, getFearGreedIndex } from "../services/crypto.js";
+import { getCurrentWeather, getWeatherForecast } from "../services/weather.js";
 
 const router = Router();
 
@@ -240,6 +241,46 @@ router.post("/api/v1/finance/crypto/top", async (req, res) => {
 router.post("/api/v1/finance/crypto/fear-greed", async (_req, res) => {
   try {
     const result = await getFearGreedIndex();
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// === Weather APIs ===
+
+// Weather - current conditions
+router.post("/api/v1/weather/current", async (req, res) => {
+  const { latitude, longitude } = req.body as { latitude?: number; longitude?: number };
+  if (latitude === undefined || longitude === undefined) {
+    res.status(400).json({ error: "Missing 'latitude' and/or 'longitude'" });
+    return;
+  }
+  if (typeof latitude !== "number" || typeof longitude !== "number") {
+    res.status(400).json({ error: "'latitude' and 'longitude' must be numbers" });
+    return;
+  }
+  try {
+    const result = await getCurrentWeather(latitude, longitude);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
+});
+
+// Weather - 7-day forecast
+router.post("/api/v1/weather/forecast", async (req, res) => {
+  const { latitude, longitude } = req.body as { latitude?: number; longitude?: number };
+  if (latitude === undefined || longitude === undefined) {
+    res.status(400).json({ error: "Missing 'latitude' and/or 'longitude'" });
+    return;
+  }
+  if (typeof latitude !== "number" || typeof longitude !== "number") {
+    res.status(400).json({ error: "'latitude' and 'longitude' must be numbers" });
+    return;
+  }
+  try {
+    const result = await getWeatherForecast(latitude, longitude);
     res.json(result);
   } catch (e) {
     res.status(400).json({ error: (e as Error).message });

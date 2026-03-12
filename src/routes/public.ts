@@ -87,6 +87,16 @@ router.get("/api/info", (req, res) => {
           price: "$0.001", description: "Crypto Fear & Greed Index — real-time market sentiment",
           example: { body: {} },
         },
+        {
+          method: "POST", path: "/api/v1/weather/current", url: `${baseUrl}/api/v1/weather/current`,
+          price: "$0.002", description: "Current weather conditions by latitude/longitude",
+          example: { body: { latitude: 40.71, longitude: -74.01 } },
+        },
+        {
+          method: "POST", path: "/api/v1/weather/forecast", url: `${baseUrl}/api/v1/weather/forecast`,
+          price: "$0.002", description: "7-day weather forecast by latitude/longitude",
+          example: { body: { latitude: 40.71, longitude: -74.01 } },
+        },
       ],
     },
   });

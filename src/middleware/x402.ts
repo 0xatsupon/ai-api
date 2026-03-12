@@ -40,6 +40,9 @@ const routes = {
   "POST /api/v1/finance/crypto": route("$0.002", "Cryptocurrency price by symbol"),
   "POST /api/v1/finance/crypto/top": route("$0.002", "Top cryptocurrencies by market cap"),
   "POST /api/v1/finance/crypto/fear-greed": route("$0.001", "Crypto Fear & Greed Index"),
+  // Weather APIs
+  "POST /api/v1/weather/current": route("$0.002", "Current weather by latitude/longitude"),
+  "POST /api/v1/weather/forecast": route("$0.002", "7-day weather forecast by latitude/longitude"),
 };
 
 export const x402Payment = paymentMiddleware(routes, resourceServer);
